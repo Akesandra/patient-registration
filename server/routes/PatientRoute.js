@@ -1,11 +1,17 @@
 import express from "express";
 import * as patientControl from "../controllers/PatientControllers";
+import patientInfos from "../models/Patient"
 
 const patientRouter = express.Router();
 
-patientRouter.post("/create",patientControl.createPatient);
-patientRouter.get("/read/:id",patientControl.getPatient);
-patientRouter.post("/edit/:id",patientControl.updatePatient)
-patientRouter.delete("/delete/:id",patientControl.deletePatient)
-patientRouter.get("/getAll",patientControl.getAllPatient)
+
+
+patientRouter.route("/")
+                    .post(patientControl.createPatient)
+                    .get(patientControl.getAllPatient)
+ patientRouter.route("/:id") 
+                    .get(patientControl.getPatient)
+                    .patch(patientControl.updatePatient)
+                    .delete(patientControl.deletePatient)
+
 export default patientRouter;

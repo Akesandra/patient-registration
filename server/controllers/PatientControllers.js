@@ -9,54 +9,57 @@ export const createPatient = async (req,res)=>{
         newPatient
     })
 }
-export const getPatient=(req,res)=>{
-    patientInfos.findById(req.params.id,(err,patientInfos)=>{
-        if(err){
-            //console.log(err)
-        }
-        else{
-            console.log(patientInfos)
-            res.status(200).json({
-                status:"success",patientInfos
-            })
-        }
-    })
 
+//to get information of a single patient
+export const getPatient= async (req,res)=>{
+  try{
+   const patient=await patientInfos.findById(req.params.id)
+   res.status(200).json({
+    status:"success",
+    patient
+  })
+}catch(err){
+            res.status(500)
 }
-export const updatePatient=(req,res)=>{
+}
+// updating A PATIENT INFO DATA
+export const updatePatient= async (req,res)=>{
     let patient={};
     patient.patientName=req.body.patientName;
     patient.phone=req.body.phone;
     patient.home=req.body.home;
     patient.email=req.body.email;
     let querry={_id:req.params.id}
-    patientInfos.updateOne(querry,patient,(err)=>{
-        if(err){
-            console.log(err)
-            return;
-        }else{
-            res.status(201).json({
-                status:"updated succesfully",
-                patientInfos
-            })
-        }
-    })
+   try{
+       const updatePatient=await patientInfos.updateOne(querry,patient)
+       res.status(200).json({
+           status:"updated succesfully",
+       })
+     } catch(err){
+           res.status(500)
+       }
+}
+//to delete a patient
+export const deletePatient=async (req,res)=>{
+   
+    let querry= {_id:req.params.id}
+
+        try{
+            const patient =await patientInfos.deleteOne(querry)
+        res.send('deleted successfully')
+    }catch(err){
+        res.status(500)
+    }
 }
 
-export const deletePatient=(req,res)=>{
-    console.log('Deleted')
-    let querry= {_id:req.params.id}
-    patientInfos.deleteOne(querry,(err)=>{
-        if(err){
-            console.log(err)
-        }else console.log('success');
-        res.send('deleted successfully')
-    })
-}
-export const getAllPatient=(req,res)=>{
-    patientInfos.find({}).then((patients)=>{
-        res.send(patients)
-    }).catch((e) =>{
-        res.status(500).srnd(e)
-    })
+
+//to get all patient information
+export const getAllPatient=async (req,res)=>{
+    try{
+     const allPatient =await patientInfos.find({})
+     res.send(allPatient)
+       
+    }catch(err) {
+        res.status(500)
+    }
 }
